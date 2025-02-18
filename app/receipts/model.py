@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, Enum, Float, ForeignKey, DateTime
+from sqlalchemy import Column, DateTime, Enum, Float, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 
 from app.common.database import Base
+
 
 class Receipt(Base):
     __tablename__ = 'receipts'
