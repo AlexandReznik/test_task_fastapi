@@ -1,10 +1,15 @@
-from fastapi import HTTPException, status
+from fastapi import Depends, HTTPException, Security, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
-from app.common.auth_utils import create_token, get_password_hash, verify_password
+from app.common.auth_utils import (create_token, get_password_hash,
+                                   verify_password)
+from app.common.database import get_db
 from app.users.model import User
+from app.common.auth_utils import decode_token
 
 
+security = HTTPBearer()
 def create_user(username: str, login: str, password: str, db: Session):
     if db.query(User).filter_by(login=login).first():
         raise HTTPException(
@@ -32,3 +37,13 @@ def authenticate_user(login: str, password: str, db: Session):
         )
 
     return create_token(data={"sub": user.login})  
+
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Security(security), db: Session=Depends(get_db)):
+    token = credentials.credentials
+    payload = decode_token(token)
+    return db.query(User).filter_by(login=payload['sub']).first()
+
+
+def require_auth(user: dict = Depends(get_current_user)):
+    return user
