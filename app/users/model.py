@@ -11,4 +11,4 @@ class User(Base):
     username = Column(String)
     login = Column(String, unique=True)
     password = Column(String)
-    receipts = relationship('Receipt', back_populates='user')
+    # receipts = relationship(Receipt, back_populates='user')

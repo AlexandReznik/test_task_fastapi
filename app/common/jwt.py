@@ -3,12 +3,14 @@ from datetime import datetime, timedelta, timezone
 from typing import Union
 
 from dotenv import load_dotenv
-from fastapi import HTTPException
-from jose import JWTError, jwt
+from jose import jwt
+from passlib.context import CryptContext
 
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 if not SECRET_KEY or not ALGORITHM:
     raise EnvironmentError("Environment variables SECRET_KEY and ALGORITHM must be set")
@@ -40,21 +42,28 @@ def create_token(data: dict, expires_delta: Union[timedelta, None] = None):
     return encoded_jwt
 
 
-def decode_token(token: str):
+def get_password_hash(password):
     """
-    Decodes and validates the JWT token from the request.
+    Hash a plain password using bcrypt.
 
     Args:
-        token (str): The JWT token to decode, typically provided by the OAuth2 scheme.
+        password (str): The plain-text password to be hashed.
 
     Returns:
-        dict: The decoded JWT payload if the token is valid.
-
-    Raises:
-        HTTPException: If the JWT token is invalid or expired, raises a 401 Unauthorized error.
+        str: The hashed password.
     """
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Could not validate credentials")
+    return pwd_context.hash(password)
+
+
+def verify_password(plain_password, hashed_password):
+    """
+    Verify if a plain password matches the hashed password.
+
+    Args:
+        plain_password (str): The plain-text password to be verified.
+        hashed_password (str): The hashed password to compare with.
+
+    Returns:
+        bool: True if the plain password matches the hashed password, False otherwise.
+    """
+    return pwd_context.verify(plain_password, hashed_password)
