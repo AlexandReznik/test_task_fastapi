@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch
-from app.common.jwt import create_token
+from app.common.auth_utils import create_token
 
 
 SECRET_KEY = "test-secret"
@@ -9,7 +9,7 @@ ALGORITHM = "HS256"
 
 @pytest.fixture
 def mock_encode():
-    with patch("app.common.jwt.jwt.encode") as mock:
+    with patch("app.common.auth_utils.jwt.encode") as mock:
         yield mock
 
 

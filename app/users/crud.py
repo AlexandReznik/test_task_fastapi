@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.common.jwt import create_token, get_password_hash, verify_password
+from app.common.auth_utils import create_token, get_password_hash, verify_password
 from app.users.model import User
 
 

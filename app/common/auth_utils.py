@@ -3,7 +3,8 @@ from datetime import datetime, timedelta, timezone
 from typing import Union
 
 from dotenv import load_dotenv
-from jose import jwt
+from fastapi import HTTPException
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 load_dotenv()
@@ -18,8 +19,6 @@ if not SECRET_KEY or not ALGORITHM:
 
 def create_token(data: dict, expires_delta: Union[timedelta, None] = None):
     """
-    Creates a JWT token with the specified data and expiration time.
-
     Args:
         data (dict): The data to encode in the JWT token.
         expires_delta (Union[timedelta, None], optional): 
@@ -44,8 +43,6 @@ def create_token(data: dict, expires_delta: Union[timedelta, None] = None):
 
 def get_password_hash(password):
     """
-    Hash a plain password using bcrypt.
-
     Args:
         password (str): The plain-text password to be hashed.
 
@@ -57,8 +54,6 @@ def get_password_hash(password):
 
 def verify_password(plain_password, hashed_password):
     """
-    Verify if a plain password matches the hashed password.
-
     Args:
         plain_password (str): The plain-text password to be verified.
         hashed_password (str): The hashed password to compare with.
@@ -67,3 +62,21 @@ def verify_password(plain_password, hashed_password):
         bool: True if the plain password matches the hashed password, False otherwise.
     """
     return pwd_context.verify(plain_password, hashed_password)
+
+
+def decode_token(token: str):
+    """
+    Args:
+        token (str): The JWT token to decode, typically provided by the OAuth2 scheme.
+
+    Returns:
+        dict: The decoded JWT payload if the token is valid.
+
+    Raises:
+        HTTPException: If the JWT token is invalid or expired, raises a 401 Unauthorized error.
+    """
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Could not validate credentials")
