@@ -47,5 +47,5 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Security(securi
     return db.query(User).filter_by(login=payload['sub']).first()
 
 
-def require_auth(user: dict = Depends(get_current_user)):
-    return user
+# def require_auth(user: dict = Depends(get_current_user)):
+#     return user

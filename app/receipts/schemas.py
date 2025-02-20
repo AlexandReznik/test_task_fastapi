@@ -11,13 +11,13 @@ class PaymentSchema(BaseModel):
     amount: float
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ReceiptBaseSchema(BaseModel):
     products: List[ProductCreateSchema]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ReceiptCreateSchema(ReceiptBaseSchema):

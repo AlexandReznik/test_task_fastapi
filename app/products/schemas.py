@@ -7,7 +7,7 @@ class ProductBaseSchema(BaseModel):
     quantity: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ProductCreateSchema(ProductBaseSchema):
