@@ -10,6 +10,8 @@ from app.common.auth_utils import decode_token
 
 
 security = HTTPBearer()
+
+
 def create_user(username: str, login: str, password: str, db: Session):
     if db.query(User).filter_by(login=login).first():
         raise HTTPException(
