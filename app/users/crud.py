@@ -41,7 +41,10 @@ def authenticate_user(login: str, password: str, db: Session):
     return create_token(data={"sub": user.login})  
 
 
-def get_current_user(credentials: HTTPAuthorizationCredentials = Security(security), db: Session=Depends(get_db)):
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Security(security), 
+    db: Session = Depends(get_db)
+):
     token = credentials.credentials
     payload = decode_token(token)
     return db.query(User).filter_by(login=payload['sub']).first()

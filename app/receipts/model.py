@@ -30,5 +30,3 @@ class Receipt(Base):
             'rest': self.rest,
             'created_at': self.created_at.isoformat(),
         }
-
-

@@ -13,6 +13,7 @@ class PaymentSchema(BaseModel):
     class Config:
         from_attributes = True
 
+
 class ReceiptBaseSchema(BaseModel):
     products: List[ProductCreateSchema]
 

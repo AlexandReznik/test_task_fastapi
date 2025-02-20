@@ -13,4 +13,8 @@ def get_jwt(user_payload, test_client):
 
 def create_receipt(user_payload, test_client, receipt_payload):
     token = get_jwt(user_payload, test_client)
-    return test_client.post("/receipt/", headers={"Authorization": f"Bearer {token}"}, json=receipt_payload)
+    return test_client.post(
+        "/receipt/", 
+        headers={"Authorization": f"Bearer {token}"}, 
+        json=receipt_payload
+    )

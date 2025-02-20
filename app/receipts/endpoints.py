@@ -37,7 +37,11 @@ def receipts_list(
 
 
 @router.get('/{receipt_id}')
-def get_receipt_endpoint(receipt_id: int, user=Depends(require_auth), db: Session = Depends(get_db)):
+def get_receipt_endpoint(
+    receipt_id: int, 
+    user=Depends(require_auth), 
+    db: Session = Depends(get_db)
+):
     receipt = get_receipt_by_id(db, receipt_id)
     if receipt:
         return create_json_response(receipt.to_dict())

@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.products.model import Product
@@ -39,6 +40,13 @@ def create_receipt(db: Session, user: User, receipt_data: ReceiptCreateSchema):
         db.add(db_product)
         total += product.price * product.quantity
 
+    if db_receipt.amount < total:
+        db.rollback() 
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Insufficient payment: required {total}, but received {db_receipt.amount}"
+        )
+    
     db_receipt.total = total
     db_receipt.rest = db_receipt.amount - total
     db.commit()
@@ -47,7 +55,8 @@ def create_receipt(db: Session, user: User, receipt_data: ReceiptCreateSchema):
 
 
 def get_receipts(db: Session, user: User, filters, limit: int, offset: int):
-    query = filters.filter(db.query(Receipt).filter(Receipt.user_id == user.id)).limit(limit).offset(offset)
+    query = filters.filter(db.query(Receipt).filter(
+        Receipt.user_id == user.id)).limit(limit).offset(offset)
     return [receipt.to_dict() for receipt in query]
 
 

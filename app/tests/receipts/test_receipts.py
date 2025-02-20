@@ -21,7 +21,10 @@ def test_get_receipt_endpoint(test_client, db_session, user_payload, receipt_pay
     create_response = create_receipt(user_payload, test_client, receipt_payload)
     receipt_id = create_response.json()["id"]
     
-    response = test_client.get(f"/receipt/{receipt_id}", headers={"Authorization": f"Bearer {token}"})
+    response = test_client.get(
+        f"/receipt/{receipt_id}", 
+        headers={"Authorization": f"Bearer {token}"}
+    )
     
     assert response.status_code == 200
     assert response.json()["id"] == receipt_id
