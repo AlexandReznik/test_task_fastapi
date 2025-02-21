@@ -1,12 +1,6 @@
 
 # FastAPI Receipt Management System
 
-### Features:
-- User authentication (sign-up and login).
-- Receipt creation, viewing, and formatting.
-- Support for multiple payment types (cash, cashless).
-- Database-backed system with SQLAlchemy and PostgreSQL.
-
 ## Project Setup
 
 ### Prerequisites
