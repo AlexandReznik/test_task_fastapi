@@ -5,18 +5,57 @@ from app.receipts.model import Receipt
 
 
 def create_json_response(data, status_code=status.HTTP_200_OK):
+    """
+    Creates a JSON response.
+
+    Args:
+        data (dict): The data to be included in the response body.
+        status_code (int): The HTTP status code (default is 200).
+
+    Returns:
+        JSONResponse: The JSON response with the provided data and status code.
+    """
     return JSONResponse(status_code=status_code, content=data)
 
 
 def raise_not_found_exception(detail: str):
+    """
+    Raises an HTTP 404 Not Found exception with a custom detail message.
+
+    Args:
+        detail (str): The detail message to be sent in the exception.
+
+    Raises:
+        HTTPException: Raises a 404 HTTPException with the provided detail message.
+    """
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=detail)
 
 
 def calculate_product_total(price: float, quantity: int) -> float:
+    """
+    Calculates the total price for a product.
+
+    Args:
+        price (float): The price of a single unit of the product.
+        quantity (int): The number of units of the product.
+
+    Returns:
+        float: The total price (price * quantity).
+    """
     return price * quantity
 
 
 def format_receipt(receipt: Receipt, line_width: int) -> str:
+    """
+    Formats a receipt into a string representation.
+
+    Args:
+        receipt (Receipt): The receipt object to format.
+        line_width (int): The width of the lines in the formatted receipt.
+
+    Returns:
+        str: The formatted receipt as a string.
+    """
     lines = []
     
     payment_types = {"cash": "Готівка", "cashless": "Картка"}

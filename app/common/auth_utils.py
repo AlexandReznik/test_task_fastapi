@@ -19,6 +19,17 @@ if not SECRET_KEY or not ALGORITHM:
 
 
 def create_token(data: dict, expires_delta: Union[timedelta, None] = None):
+    """
+    Creates a JWT token with an expiration time.
+
+    Args:
+        data (dict): The data to encode in the token.
+        expires_delta (Union[timedelta, None]): The time delta for the
+        token's expiration (default is 15 minutes).
+
+    Returns:
+        str: The encoded JWT token as a string.
+    """
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -30,14 +41,45 @@ def create_token(data: dict, expires_delta: Union[timedelta, None] = None):
 
 
 def get_password_hash(password):
+    """
+    Hashes a password using the password context.
+
+    Args:
+        password (str): The plain-text password to hash.
+
+    Returns:
+        str: The hashed password.
+    """
     return pwd_context.hash(password)
 
 
 def verify_password(plain_password, hashed_password):
+    """
+    Verifies if a plain-text password matches a hashed password.
+
+    Args:
+        plain_password (str): The plain-text password to verify.
+        hashed_password (str): The hashed password to compare with.
+
+    Returns:
+        bool: True if the passwords match, False otherwise.
+    """
     return pwd_context.verify(plain_password, hashed_password)
 
 
 def decode_token(token: str):
+    """
+    Decodes and validates a JWT token.
+
+    Args:
+        token (str): The JWT token to decode.
+
+    Returns:
+        dict: The decoded payload of the token.
+
+    Raises:
+        HTTPException: If the token is invalid or expired.
+    """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
