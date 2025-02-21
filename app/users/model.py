@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Index, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.common.database import Base
@@ -13,3 +13,7 @@ class User(Base):
     password = Column(String)
 
     receipts = relationship("Receipt", back_populates='user')
+
+    __table_args__ = (
+        Index('ix_user_login', 'login'),  
+    )
