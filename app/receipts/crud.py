@@ -7,6 +7,7 @@ from app.products.model import Product
 from app.receipts.model import Receipt
 from app.receipts.schemas import ReceiptCreateSchema
 from app.users.model import User
+from app.common.common_utils import calculate_product_total
 
 
 def create_receipt(db: Session, user: User, receipt_data: ReceiptCreateSchema):
@@ -24,21 +25,22 @@ def create_receipt(db: Session, user: User, receipt_data: ReceiptCreateSchema):
     db.refresh(db_receipt)
 
     for product in receipt_data.products:
+        product_total = calculate_product_total(product.price, product.quantity)
         db_product = Product(
             name=product.name,
             price=product.price,
             quantity=product.quantity,
             receipt_id=db_receipt.id,
-            total=product.price * product.quantity
+            total=product_total
         )
         products.append({
             'name': product.name,
             'price': product.price,
             'quantity': product.quantity,
-            'total': product.price * product.quantity
+            'total': product_total
         })
         db.add(db_product)
-        total += product.price * product.quantity
+        total += product_total
 
     if db_receipt.amount < total:
         db.rollback() 

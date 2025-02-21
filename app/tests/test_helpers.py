@@ -1,9 +1,9 @@
 def signup_request(user_payload, test_client):
-    return test_client.post("user/sign-up/", json=user_payload)
+    return test_client.post("users/sign-up/", json=user_payload)
 
 
 def login_request(user_payload, test_client):
-    return test_client.post("user/login/", json=user_payload)
+    return test_client.post("users/login/", json=user_payload)
 
 
 def get_jwt(user_payload, test_client):
@@ -14,7 +14,7 @@ def get_jwt(user_payload, test_client):
 def create_receipt(user_payload, test_client, receipt_payload):
     token = get_jwt(user_payload, test_client)
     return test_client.post(
-        "/receipt/", 
+        "/receipts/", 
         headers={"Authorization": f"Bearer {token}"}, 
         json=receipt_payload
     )
